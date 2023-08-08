@@ -30,6 +30,7 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt-jackson:${jwt_version}"
 
 	implementation 'org.postgresql:postgresql:42.6.0'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
