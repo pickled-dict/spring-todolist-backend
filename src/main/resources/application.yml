@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/spring_todo"
+    username: "user"
+    password: "password"
+
+  jpa:
+    hibernate:
+      ddl-auto: "update"
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.PostgreSQLDialect"
+        jdbc:
+          lob:
+            non_contextual_creation: "true"
+
+pickleddict:
+  app:
+    jwtSecret: "bARNHnhdT1SahBE3XpyuiukOrYTIveAOvLsED9nHXfavGwC0FvtKsMx8FEhHKZXF"
+    jwtExpirationMs: "86400000"
