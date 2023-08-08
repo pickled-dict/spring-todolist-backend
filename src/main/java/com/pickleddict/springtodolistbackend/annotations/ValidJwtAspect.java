@@ -1,8 +1,6 @@
 package com.pickleddict.springtodolistbackend.annotations;
 
-import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
 import com.pickleddict.springtodolistbackend.security.jwt.JwtUtils;
-import io.jsonwebtoken.Jwts;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ErrorHandler;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

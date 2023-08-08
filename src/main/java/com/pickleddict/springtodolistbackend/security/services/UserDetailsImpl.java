@@ -5,16 +5,18 @@ import com.pickleddict.springtodolistbackend.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Objects;
 
 public class UserDetailsImpl implements UserDetails {
 
+    @Serial
     private static final long serialVersionUID = -4177367782749117822L;
 
-    private Long id;
+    private final Long id;
 
-    private String email;
+    private final String email;
 
     @JsonIgnore
     private String password;
