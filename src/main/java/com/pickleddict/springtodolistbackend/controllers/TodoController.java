@@ -1,5 +1,6 @@
 package com.pickleddict.springtodolistbackend.controllers;
 
+import com.pickleddict.springtodolistbackend.annotations.ValidJwt;
 import com.pickleddict.springtodolistbackend.dto.TodoDto;
 import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
 import com.pickleddict.springtodolistbackend.services.TodoService;
@@ -16,22 +17,26 @@ public class TodoController {
     @Autowired
     TodoService todoService;
 
+    @ValidJwt
     @PostMapping("/todolist/{todoListId}/todo")
     public ResponseEntity<?> createNewTodo(@Valid @RequestBody TodoDto todoDto, @PathVariable Long todoListId) {
         todoService.createTodo(todoDto, todoListId);
         return ResponseEntity.ok(new MessageResponse("Todo was created"));
     }
 
+    @ValidJwt
     @GetMapping("/todo")
     public ResponseEntity<?> getTodoById(@RequestParam(name = "id") Long todoId) {
         return ResponseEntity.ok(todoService.getTodoById(todoId));
     }
 
+    @ValidJwt
     @PutMapping("/todo/{todoId}")
     public ResponseEntity<?> updateTodoById(@Valid @RequestBody TodoDto todoDto, @PathVariable Long todoId) {
         return ResponseEntity.ok(todoService.updateTodo(todoDto, todoId));
     }
 
+    @ValidJwt
     @DeleteMapping("/todo/{todoId}")
     public ResponseEntity<?> deleteTodoById(@PathVariable Long todoId) {
         todoService.deleteTodo(todoId);
