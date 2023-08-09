@@ -2,7 +2,6 @@ package com.pickleddict.springtodolistbackend.controllers;
 
 import com.pickleddict.springtodolistbackend.annotations.ValidJwt;
 import com.pickleddict.springtodolistbackend.dto.TodoDto;
-import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
 import com.pickleddict.springtodolistbackend.services.TodoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,33 +12,30 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 public class TodoController {
-
     @Autowired
     TodoService todoService;
 
     @ValidJwt
     @PostMapping("/todolist/{todoListId}/todo")
     public ResponseEntity<?> createNewTodo(@Valid @RequestBody TodoDto todoDto, @PathVariable Long todoListId) {
-        todoService.createTodo(todoDto, todoListId);
-        return ResponseEntity.ok(new MessageResponse("Todo was created"));
+        return todoService.createTodo(todoDto, todoListId);
     }
 
     @ValidJwt
     @GetMapping("/todo")
     public ResponseEntity<?> getTodoById(@RequestParam(name = "id") Long todoId) {
-        return ResponseEntity.ok(todoService.getTodoById(todoId));
+        return todoService.getTodoById(todoId);
     }
 
     @ValidJwt
     @PutMapping("/todo/{todoId}")
     public ResponseEntity<?> updateTodoById(@Valid @RequestBody TodoDto todoDto, @PathVariable Long todoId) {
-        return ResponseEntity.ok(todoService.updateTodo(todoDto, todoId));
+        return todoService.updateTodo(todoDto, todoId);
     }
 
     @ValidJwt
     @DeleteMapping("/todo/{todoId}")
     public ResponseEntity<?> deleteTodoById(@PathVariable Long todoId) {
-        todoService.deleteTodo(todoId);
-        return ResponseEntity.ok(new MessageResponse("Todo with id " + todoId + " was successfully deleted"));
+        return todoService.deleteTodo(todoId);
     }
 }

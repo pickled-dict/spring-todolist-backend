@@ -3,6 +3,7 @@ package com.pickleddict.springtodolistbackend.services;
 import com.pickleddict.springtodolistbackend.models.User;
 import com.pickleddict.springtodolistbackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 }

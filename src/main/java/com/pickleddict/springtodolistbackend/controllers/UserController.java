@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
     @Autowired
     UserService userService;
 
     @GetMapping
     @ValidJwt
     public ResponseEntity<?> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+        return userService.getAllUsers();
     }
 }

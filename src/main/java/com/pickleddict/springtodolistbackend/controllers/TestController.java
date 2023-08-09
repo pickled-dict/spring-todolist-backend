@@ -15,10 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/test")
 public class TestController {
-
-    @Autowired
-    JwtUtils jwtUtils;
-
     @GetMapping("/all")
     public ResponseEntity<?> allAccess() {
         return ResponseEntity.ok(new MessageResponse("Everyone gets a car"));
