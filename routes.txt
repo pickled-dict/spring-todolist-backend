@@ -1,0 +1,20 @@
+{GET [/actuator], produces [application/vnd.spring-boot.actuator.v3+json || application/vnd.spring-boot.actuator.v2+json || application/json]}
+{GET [/actuator/mappings], produces [application/vnd.spring-boot.actuator.v3+json || application/vnd.spring-boot.actuator.v2+json || application/json]}
+{DELETE [/api/todolist/{id}]}
+{POST [/api/auth/signin]}
+{ [/error], produces [text/html]}
+{POST [/api/todolist/{todoListId}/todo]}
+{ [/error]}
+{PUT [/api/todo/{todoId}]}
+{GET [/api/todolist/all]}
+{GET [/api/user]}
+{PUT [/api/todolist/{id}]}
+{GET [/api/todolist]}
+{POST [/api/todolist]}
+{POST [/api/auth/signup]}
+{GET [/api/test/hasjwt]}
+{GET [/api/test/all]}
+{DELETE [/api/todo/{todoId}]}
+{GET [/api/todo]}
+/webjars/**
+/**
