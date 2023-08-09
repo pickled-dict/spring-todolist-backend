@@ -1,5 +1,6 @@
 package com.pickleddict.springtodolistbackend.annotations;
 
+import com.pickleddict.springtodolistbackend.errors.ApiError;
 import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
 import com.pickleddict.springtodolistbackend.security.jwt.JwtUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,8 +33,6 @@ public class ValidJwtAspect {
             return joinPoint.proceed();
         }
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new MessageResponse("Something went wrong while processing JWT token")
-        );
+        throw new InternalError("Something went wrong while processing your request.");
     }
 }

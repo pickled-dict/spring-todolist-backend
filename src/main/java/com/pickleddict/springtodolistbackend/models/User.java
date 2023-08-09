@@ -2,6 +2,11 @@ package com.pickleddict.springtodolistbackend.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "email")})
@@ -17,6 +22,10 @@ public class User {
     @Column
     @NotBlank
     private String password;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "users_id")
+    private List<TodoList> todoLists;
 
     public User() {}
 
@@ -47,5 +56,17 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<TodoList> getTodoLists() {
+        return todoLists;
+    }
+
+    public void setTodoLists(List<TodoList> todoLists) {
+        this.todoLists = todoLists;
+    }
+
+    public void addTodoList(TodoList todoList) {
+        this.todoLists.add(todoList);
     }
 }
