@@ -49,4 +49,8 @@ public class TodoList {
     public void setTodos(List<Todo> todos) {
         this.todos = todos;
     }
+
+    public void addTodo(Todo todo) {
+        todos.add(todo);
+    }
 }
