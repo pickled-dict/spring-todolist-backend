@@ -36,4 +36,12 @@ public class TodoDto {
     public void setComplete(boolean complete) {
         this.complete = complete;
     }
+
+    @Override
+    public String toString() {
+        return "TodoDto{" +
+                "content='" + content + '\'' +
+                ", complete=" + complete +
+                '}';
+    }
 }
