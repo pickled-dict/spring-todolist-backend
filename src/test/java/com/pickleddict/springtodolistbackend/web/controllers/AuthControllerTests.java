@@ -34,15 +34,6 @@ public class AuthControllerTests extends AbstractMvcTest {
     @MockBean
     private AuthenticationService authenticationService;
 
-    @MockBean
-    private UserDetailsServiceImpl userDetailsService;
-
-    @MockBean
-    private AuthEntryPointJwt authEntryPointJwt;
-
-    @MockBean
-    private JwtUtils jwtUtils;
-
     private void mockAuthentication() {
         when(authenticationService.authenticateUser(VALID_LOGIN)).thenReturn(
                 ResponseEntity.ok(new JwtResponseDto("FAKEJWT", 12L, "mail@mail.com"))
@@ -135,7 +126,6 @@ public class AuthControllerTests extends AbstractMvcTest {
     @Test
     public void testSignInReturnsBadRequestWhenPasswordDoesNotExist() throws Exception {
         mockAuthentication();
-
         LoginRequestDto badLoginRequest = new LoginRequestDto();
         badLoginRequest.setEmail("mail@mail.com");
         String badLoginRequestBody = objectMapper.writeValueAsString(badLoginRequest);
@@ -155,7 +145,6 @@ public class AuthControllerTests extends AbstractMvcTest {
     @Test
     public void testSignInReturnsBadRequestWhenEmailDoesNotExist() throws Exception {
         mockAuthentication();
-
         LoginRequestDto badLoginRequest = new LoginRequestDto();
         badLoginRequest.setPassword("password");
         String badLoginRequestBody = objectMapper.writeValueAsString(badLoginRequest);
