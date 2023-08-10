@@ -5,6 +5,7 @@ import com.pickleddict.springtodolistbackend.dto.SignupRequestDto;
 import com.pickleddict.springtodolistbackend.services.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> signupUser(@Valid @RequestBody SignupRequestDto signupRequest) {
         return authenticationService.signupUser(signupRequest);
     }

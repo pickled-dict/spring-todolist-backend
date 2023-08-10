@@ -1,4 +1,4 @@
-package com.pickleddict.springtodolistbackend.security;
+package com.pickleddict.springtodolistbackend;
 
 import com.pickleddict.springtodolistbackend.security.jwt.AuthEntryPointJwt;
 import com.pickleddict.springtodolistbackend.security.jwt.AuthTokenFilter;

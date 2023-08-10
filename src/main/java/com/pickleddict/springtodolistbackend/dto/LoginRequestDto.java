@@ -10,6 +10,14 @@ public class LoginRequestDto {
     @NotBlank
     private String password;
 
+    public LoginRequestDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
+
+    public LoginRequestDto() {
+    }
+
     public String getEmail() {
         return email;
     }
@@ -24,5 +32,13 @@ public class LoginRequestDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginRequestDto{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

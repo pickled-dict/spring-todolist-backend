@@ -9,14 +9,18 @@ import com.pickleddict.springtodolistbackend.repositories.UserRepository;
 import com.pickleddict.springtodolistbackend.security.jwt.JwtUtils;
 import com.pickleddict.springtodolistbackend.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class AuthenticationService {
@@ -45,17 +49,15 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<MessageResponse> signupUser(SignupRequestDto signupRequest) {
-        userRepository.findByEmail(
-                signupRequest.getEmail())
-                .orElseThrow(
-                        () -> new UsernameNotFoundException("User with email " + signupRequest.getEmail() + " does not exist")
-                );
+        userRepository.findByEmail(signupRequest.getEmail()).ifPresent(user -> {
+            throw new BadCredentialsException("Email has already been taken!");
+        });
 
         // create new users account
         User user = new User(signupRequest.getEmail(), encoder.encode(signupRequest.getPassword()));
 
         userRepository.save(user);
 
-        return ResponseEntity.ok(new MessageResponse("User was created successfully!"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("User was created successfully!"));
     }
 }
