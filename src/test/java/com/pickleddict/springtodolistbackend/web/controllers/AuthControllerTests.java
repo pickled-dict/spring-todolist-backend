@@ -10,9 +10,9 @@ import com.pickleddict.springtodolistbackend.services.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.HttpClientErrorException;
@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AuthController.class)
-@Import(WebSecurityConfig.class)
 public class AuthControllerTests extends AbstractMvcTest {
     private static final String SIGNUP_ROUTE = "/api/auth/signup";
 
@@ -42,6 +41,7 @@ public class AuthControllerTests extends AbstractMvcTest {
 
     // Signup route
     @Test
+    @WithAnonymousUser
     public void SignUp_ValidRequestBody_CreatedResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(new SignupRequestDto("email@mail.com", "password"));
 
@@ -57,6 +57,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void Signup_NoEmail_BadRequestResponse() throws Exception {
         SignupRequestDto signupRequest = new SignupRequestDto();
         signupRequest.setPassword("password");
@@ -74,6 +75,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void SignUp_NoPassword_BadRequestResponse() throws Exception {
         SignupRequestDto loginRequestDto = new SignupRequestDto();
         loginRequestDto.setEmail("mail@mail.com");
@@ -91,6 +93,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void SignUp_NoEmailNoPassword_BadRequestResponse() throws Exception {
         SignupRequestDto loginRequestDto = new SignupRequestDto();
         String requestBody = objectMapper.writeValueAsString(loginRequestDto);
@@ -108,6 +111,7 @@ public class AuthControllerTests extends AbstractMvcTest {
 
     // signin route
     @Test
+    @WithAnonymousUser
     public void SignIn_ValidRequest_OkResponse() throws Exception {
         mockAuthentication();
         String loginRequestBody = objectMapper.writeValueAsString(VALID_LOGIN);
@@ -124,6 +128,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void SignIn_NoPassword_BadRequestResponse() throws Exception {
         mockAuthentication();
         LoginRequestDto badLoginRequest = new LoginRequestDto();
@@ -143,6 +148,7 @@ public class AuthControllerTests extends AbstractMvcTest {
 
 
     @Test
+    @WithAnonymousUser
     public void SignIn_NoEmail_BadRequestResponse() throws Exception {
         mockAuthentication();
         LoginRequestDto badLoginRequest = new LoginRequestDto();
@@ -161,6 +167,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithAnonymousUser
     public void SignIn_NoEmailNoPassword_BadRequestResponse() throws Exception {
         mockAuthentication();
         LoginRequestDto badLoginRequest = new LoginRequestDto();
