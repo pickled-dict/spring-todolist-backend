@@ -38,56 +38,49 @@ public class TodoControllerTests extends AbstractMvcTest {
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testCreatingATodoWithValidBodyRespondsWithOk() throws Exception {
+    public void CreateTodo_ValidBodyAndAuth_OkResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(VALID_TODO);
         mockCreateTodo();
 
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/todolist/" + TODOLIST_ID + "/todo")
-                .content(requestBody)
-                .with(csrf())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        );
+        ResultActions result = performCreateTodoRequest(requestBody);
 
         result.andDo(print()).andExpect(status().isCreated());
     }
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testCreatingATodoWithInvalidBodyRespondsWithBadRequest() throws Exception {
+    public void CreateTodo_InvalidBodyValidAuth_BadRequestResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO);
         mockCreateTodo();
 
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/todolist/" + TODOLIST_ID + "/todo")
-                .content(requestBody)
-                .with(csrf())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        );
+        ResultActions result = performCreateTodoRequest(requestBody);
 
         result.andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
+    public void CreateTodo_ValidBodyInvalidAuth_UnauthorizedResponse() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(VALID_TODO);
+        mockCreateTodo();
+
+        ResultActions result = performCreateTodoRequest(requestBody);
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testGettingATodoWithAValidIdRespondsWithOk() throws Exception {
+    public void GetTodoById_ValidIdValidAuth_OkResponse() throws Exception {
         mockGetTodo();
 
-        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
-                .get(ROUTE + "?id=" + TODO_ID)
-                .with(csrf())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-        );
+        ResultActions result = performGetTodoRequest();
 
         result.andDo(print()).andExpect(status().isOk());
     }
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testGettingATodoWithAnInvalidIdRespondsWithBadRequest() throws Exception {
+    public void GetTodoById_InvalidIdValidAuth_BadRequestResponse() throws Exception {
         mockGetTodo();
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -101,8 +94,17 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    public void GetTodoById_ValidIdInvalidAuth_UnauthorizedResponse() throws Exception {
+        mockGetTodo();
+
+        ResultActions result = performGetTodoRequest();
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testUpdatingATodoWithValidBodyRespondsWithOk() throws Exception {
+    public void UpdateTodo_ValidBodyAndAuth_OkResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(VALID_TODO);
         mockUpdateTodo();
 
@@ -119,7 +121,7 @@ public class TodoControllerTests extends AbstractMvcTest {
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testUpdatingATodoWithInvalidBodyRespondsWithBadRequest() throws Exception {
+    public void UpdateTodo_InvalidBodyValidAuth_BadRequestResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO);
         mockUpdateTodo();
 
@@ -135,8 +137,24 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    public void UpdateTodo_ValidBodyInvalidAuth_UnauthorizedResponse() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(VALID_TODO);
+        mockUpdateTodo();
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .put(ROUTE + "/" + TODO_ID)
+                .content(requestBody)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testDeletingATodoReturnsOkResponse() throws Exception {
+    public void DeleteTodo_ValidUser_OkResponse() throws Exception {
         when(todoService.deleteTodo(TODO_ID))
                 .thenReturn(ResponseEntity.ok(new MessageResponse("ok")))
                 .thenThrow(HttpClientErrorException.BadRequest.class);
@@ -149,6 +167,22 @@ public class TodoControllerTests extends AbstractMvcTest {
         );
 
         result.andDo(print()).andExpect(status().isOk());
+    }
+
+    @Test
+    public void DeleteTodo_InvalidUser_UnauthorizedResponse() throws Exception {
+        when(todoService.deleteTodo(TODO_ID))
+                .thenReturn(ResponseEntity.ok(new MessageResponse("ok")))
+                .thenThrow(HttpClientErrorException.BadRequest.class);
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .delete(ROUTE + "/" + TODO_ID)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
     }
 
     private void mockCreateTodo() {
@@ -167,5 +201,24 @@ public class TodoControllerTests extends AbstractMvcTest {
         when(todoService.updateTodo(VALID_TODO, TODO_ID))
                 .thenReturn(ResponseEntity.ok(new Todo()))
                 .thenThrow(HttpClientErrorException.BadRequest.class);
+    }
+
+    private ResultActions performCreateTodoRequest(String requestBody) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .post("/api/todolist/" + TODOLIST_ID + "/todo")
+                .content(requestBody)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+    }
+
+    private ResultActions performGetTodoRequest() throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .get(ROUTE + "?id=" + TODO_ID)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
     }
 }

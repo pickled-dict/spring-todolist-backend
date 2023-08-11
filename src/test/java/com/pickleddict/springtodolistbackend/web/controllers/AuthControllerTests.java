@@ -42,7 +42,7 @@ public class AuthControllerTests extends AbstractMvcTest {
 
     // Signup route
     @Test
-    public void testSignUpReturnsCreatedResponseWhenValid() throws Exception {
+    public void SignUp_ValidRequestBody_CreatedResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(new SignupRequestDto("email@mail.com", "password"));
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -57,7 +57,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
-    public void testSignUpReturnsBadRequestResponseWithNoEmail() throws Exception {
+    public void Signup_NoEmail_BadRequestResponse() throws Exception {
         SignupRequestDto signupRequest = new SignupRequestDto();
         signupRequest.setPassword("password");
         String requestBody = objectMapper.writeValueAsString(signupRequest);
@@ -74,7 +74,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
-    public void testSignUpReturnsBadRequestResponseWithNoPassword() throws Exception {
+    public void SignUp_NoPassword_BadRequestResponse() throws Exception {
         SignupRequestDto loginRequestDto = new SignupRequestDto();
         loginRequestDto.setEmail("mail@mail.com");
         String requestBody = objectMapper.writeValueAsString(loginRequestDto);
@@ -91,7 +91,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
-    public void testSignUpReturnsBadRequestResponseWithNoUsernameAndPassword() throws Exception {
+    public void SignUp_NoEmailNoPassword_BadRequestResponse() throws Exception {
         SignupRequestDto loginRequestDto = new SignupRequestDto();
         String requestBody = objectMapper.writeValueAsString(loginRequestDto);
 
@@ -108,7 +108,7 @@ public class AuthControllerTests extends AbstractMvcTest {
 
     // signin route
     @Test
-    public void testSignInReturnsOkWhenRequestIsValid() throws Exception {
+    public void SignIn_ValidRequest_OkResponse() throws Exception {
         mockAuthentication();
         String loginRequestBody = objectMapper.writeValueAsString(VALID_LOGIN);
 
@@ -124,7 +124,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
-    public void testSignInReturnsBadRequestWhenPasswordDoesNotExist() throws Exception {
+    public void SignIn_NoPassword_BadRequestResponse() throws Exception {
         mockAuthentication();
         LoginRequestDto badLoginRequest = new LoginRequestDto();
         badLoginRequest.setEmail("mail@mail.com");
@@ -143,7 +143,7 @@ public class AuthControllerTests extends AbstractMvcTest {
 
 
     @Test
-    public void testSignInReturnsBadRequestWhenEmailDoesNotExist() throws Exception {
+    public void SignIn_NoEmail_BadRequestResponse() throws Exception {
         mockAuthentication();
         LoginRequestDto badLoginRequest = new LoginRequestDto();
         badLoginRequest.setPassword("password");
@@ -161,7 +161,7 @@ public class AuthControllerTests extends AbstractMvcTest {
     }
 
     @Test
-    public void testSignInReturnsBadRequestWhenEmailAndPasswordDoesNotExist() throws Exception {
+    public void SignIn_NoEmailNoPassword_BadRequestResponse() throws Exception {
         mockAuthentication();
         LoginRequestDto badLoginRequest = new LoginRequestDto();
         String badLoginRequestBody = objectMapper.writeValueAsString(badLoginRequest);

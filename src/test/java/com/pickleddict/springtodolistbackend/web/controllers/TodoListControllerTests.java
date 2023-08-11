@@ -37,7 +37,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testCreatingATodoListWithValidBodyRespondsWithOk() throws Exception {
+    public void CreateTodoList_ValidBodyValidUser_OkResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(VALID_TODO_LIST);
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -53,7 +53,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testCreatingATodoListWithInvalidBodyRespondsWithBadRequest() throws Exception {
+    public void CreateTodoList_InvalidBodyValidUser_BadRequestResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO_LIST);
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -68,8 +68,23 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    public void CreateTodoList_ValidBodyInvalidUser_OkResponse() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(VALID_TODO_LIST);
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .post(ROUTE)
+                .content(requestBody)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testGettingAllTodoListsRespondsWithOk() throws Exception {
+    public void GetAllTodoLists_ValidUser_OkResponse() throws Exception {
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get(ROUTE + "/all")
                 .with(csrf())
@@ -81,8 +96,20 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    public void GetAllTodoLists_InvalidUser_UnauthorizedResponse() throws Exception {
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .get(ROUTE + "/all")
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testGettingTodoListByIdRespondsWithOk() throws Exception {
+    public void GetTodoListById_ValidIdAndUser_OkResponse() throws Exception {
         getTodoByIdMock();
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -97,7 +124,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testGettingTodoListByIdWithNoQueryParamRespondsWithBadRequest() throws Exception {
+    public void GetTodoListById_InvalidIdValidUser_BadRequestResponse() throws Exception {
         getTodoByIdMock();
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -111,8 +138,22 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    public void GetTodoListById_ValidIdInvalidUser_UnauthorizedResponse() throws Exception {
+        getTodoByIdMock();
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .get(ROUTE + "?id=111")
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testUpdateTodoListWithValidRequestReturnsOk() throws Exception {
+    public void UpdateTodoList_ValidRequestAndUser_OkResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(new TodoListDto("updated todo"));
         mockUpdateTodoList();
 
@@ -129,7 +170,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
 
     @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testUpdateTodoListWithInvalidRequestReturnsBadRequest() throws Exception {
+    public void UpdateTodoList_InvalidRequestValidUser_BadRequestResponse() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO_LIST);
         mockUpdateTodoList();
 
@@ -145,8 +186,24 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    public void UpdateTodoList_ValidRequestInvalidUser_UnauthorizedResponse() throws Exception {
+        String requestBody = objectMapper.writeValueAsString(new TodoListDto("updated todo"));
+        mockUpdateTodoList();
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .put(ROUTE + "/" + TODOLIST_ID)
+                .content(requestBody)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithMockUser(username = "mail@mail.com")
-    public void testDeleteTodoListWithValidIdReturnsOk() throws Exception {
+    public void DeleteTodoList_ValidIdAndUser_OkResponse() throws Exception {
         mockDeleteTodoList();
 
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
@@ -157,6 +214,20 @@ public class TodoListControllerTests extends AbstractMvcTest {
         );
 
         result.andDo(print()).andExpect(status().isOk());
+    }
+
+    @Test
+    public void DeleteTodoList_ValidIdInvalidUser_UnauthorizedResponse() throws Exception {
+        mockDeleteTodoList();
+
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders
+                .delete(ROUTE + "/" + TODOLIST_ID)
+                .with(csrf())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+        );
+
+        result.andDo(print()).andExpect(status().isUnauthorized());
     }
 
     private void getTodoByIdMock() {
