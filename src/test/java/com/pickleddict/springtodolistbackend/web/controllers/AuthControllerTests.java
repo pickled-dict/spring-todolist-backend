@@ -1,17 +1,16 @@
 package com.pickleddict.springtodolistbackend.web.controllers;
 
+import com.pickleddict.springtodolistbackend.WebSecurityConfig;
 import com.pickleddict.springtodolistbackend.dto.JwtResponseDto;
 import com.pickleddict.springtodolistbackend.dto.LoginRequestDto;
 import com.pickleddict.springtodolistbackend.web.AbstractMvcTest;
 import com.pickleddict.springtodolistbackend.controllers.AuthController;
 import com.pickleddict.springtodolistbackend.dto.SignupRequestDto;
-import com.pickleddict.springtodolistbackend.security.jwt.AuthEntryPointJwt;
-import com.pickleddict.springtodolistbackend.security.jwt.JwtUtils;
-import com.pickleddict.springtodolistbackend.security.services.UserDetailsServiceImpl;
 import com.pickleddict.springtodolistbackend.services.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
@@ -24,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = AuthController.class)
+@Import(WebSecurityConfig.class)
 public class AuthControllerTests extends AbstractMvcTest {
     private static final String SIGNUP_ROUTE = "/api/auth/signup";
 

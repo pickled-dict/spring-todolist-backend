@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.HttpClientErrorException;
@@ -36,6 +37,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     TodoService todoService;
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testCreatingATodoWithValidBodyRespondsWithOk() throws Exception {
         String requestBody = objectMapper.writeValueAsString(VALID_TODO);
         mockCreateTodo();
@@ -52,6 +54,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testCreatingATodoWithInvalidBodyRespondsWithBadRequest() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO);
         mockCreateTodo();
@@ -68,6 +71,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testGettingATodoWithAValidIdRespondsWithOk() throws Exception {
         mockGetTodo();
 
@@ -82,6 +86,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testGettingATodoWithAnInvalidIdRespondsWithBadRequest() throws Exception {
         mockGetTodo();
 
@@ -96,6 +101,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testUpdatingATodoWithValidBodyRespondsWithOk() throws Exception {
         String requestBody = objectMapper.writeValueAsString(VALID_TODO);
         mockUpdateTodo();
@@ -112,6 +118,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testUpdatingATodoWithInvalidBodyRespondsWithBadRequest() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO);
         mockUpdateTodo();
@@ -128,6 +135,7 @@ public class TodoControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testDeletingATodoReturnsOkResponse() throws Exception {
         when(todoService.deleteTodo(TODO_ID))
                 .thenReturn(ResponseEntity.ok(new MessageResponse("ok")))

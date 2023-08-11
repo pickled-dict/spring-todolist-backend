@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.HttpClientErrorException;
@@ -35,6 +36,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     TodoListService todoListService;
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testCreatingATodoListWithValidBodyRespondsWithOk() throws Exception {
         String requestBody = objectMapper.writeValueAsString(VALID_TODO_LIST);
 
@@ -50,6 +52,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testCreatingATodoListWithInvalidBodyRespondsWithBadRequest() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO_LIST);
 
@@ -65,6 +68,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testGettingAllTodoListsRespondsWithOk() throws Exception {
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders
                 .get(ROUTE + "/all")
@@ -77,6 +81,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testGettingTodoListByIdRespondsWithOk() throws Exception {
         getTodoByIdMock();
 
@@ -91,6 +96,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testGettingTodoListByIdWithNoQueryParamRespondsWithBadRequest() throws Exception {
         getTodoByIdMock();
 
@@ -105,6 +111,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testUpdateTodoListWithValidRequestReturnsOk() throws Exception {
         String requestBody = objectMapper.writeValueAsString(new TodoListDto("updated todo"));
         mockUpdateTodoList();
@@ -121,6 +128,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testUpdateTodoListWithInvalidRequestReturnsBadRequest() throws Exception {
         String requestBody = objectMapper.writeValueAsString(INVALID_TODO_LIST);
         mockUpdateTodoList();
@@ -137,6 +145,7 @@ public class TodoListControllerTests extends AbstractMvcTest {
     }
 
     @Test
+    @WithMockUser(username = "mail@mail.com")
     public void testDeleteTodoListWithValidIdReturnsOk() throws Exception {
         mockDeleteTodoList();
 
