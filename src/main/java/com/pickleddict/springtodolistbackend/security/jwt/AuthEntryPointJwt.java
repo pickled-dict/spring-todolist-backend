@@ -24,7 +24,11 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, "Unauthorized", authException);
+        ApiError apiError = new ApiError(
+                HttpStatus.UNAUTHORIZED,
+                "Bad username/password combination",
+                authException
+        );
         OutputStream out = response.getOutputStream();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
