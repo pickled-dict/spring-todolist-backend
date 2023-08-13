@@ -3,6 +3,7 @@ package com.pickleddict.springtodolistbackend.services;
 import com.pickleddict.springtodolistbackend.dto.JwtResponseDto;
 import com.pickleddict.springtodolistbackend.dto.LoginRequestDto;
 import com.pickleddict.springtodolistbackend.dto.SignupRequestDto;
+import com.pickleddict.springtodolistbackend.dto.VerifyUserDto;
 import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
 import com.pickleddict.springtodolistbackend.models.User;
 import com.pickleddict.springtodolistbackend.repositories.UserRepository;
@@ -15,9 +16,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 
 @Service
@@ -57,5 +60,11 @@ public class AuthenticationService {
         userRepository.save(user);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("User was created successfully!"));
+    }
+
+    public ResponseEntity<?> verifyUser(VerifyUserDto verifyUserDto) {
+        jwtUtils.validateJwtToken(verifyUserDto.getToken());
+
+        return ResponseEntity.ok(new MessageResponse("user is valid"));
     }
 }
