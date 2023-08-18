@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.rmi.UnexpectedException;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/todolist")
@@ -19,7 +21,7 @@ public class TodoListController {
     @PostMapping
     @ValidJwt
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> createTodoList(@Valid @RequestBody TodoListDto todoListDto) {
+    public ResponseEntity<?> createTodoList(@Valid @RequestBody TodoListDto todoListDto) throws UnexpectedException {
         return todoListService.createTodoList(todoListDto);
     }
 

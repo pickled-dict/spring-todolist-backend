@@ -8,8 +8,12 @@ import com.pickleddict.springtodolistbackend.repositories.TodoListRepository;
 import com.pickleddict.springtodolistbackend.repositories.TodoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.rmi.UnexpectedException;
+import java.util.List;
 
 @Service
 public class TodoService {
@@ -19,14 +23,26 @@ public class TodoService {
     @Autowired
     TodoRepository todoRepository;
 
-    public ResponseEntity<MessageResponse> createTodo(TodoDto todoDto, Long todoListId) {
+    public ResponseEntity<Todo> createTodo(TodoDto todoDto, Long todoListId) throws UnexpectedException {
         TodoList todoList = todoListRepository.findById(todoListId).orElseThrow(
                 () -> new EntityNotFoundException("Todolist with id " + todoListId + " was not found")
         );
         todoList.addTodo(new Todo(todoDto.getContent(), todoDto.isComplete()));
         todoListRepository.save(todoList);
 
-        return ResponseEntity.ok(new MessageResponse("Todo was created"));
+        List<Todo> todos =  todoList.getTodos();
+
+        long largestId = Long.MIN_VALUE;
+        for (Todo todo : todos) {
+            long currentId = todo.getId();
+            if (currentId > largestId) {
+                largestId = currentId;
+            }
+        }
+
+        Todo mostRecent = todoRepository.findById(largestId).orElseThrow(() -> new UnexpectedException("something went wrong"));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(mostRecent);
     }
 
     public ResponseEntity<Todo> getTodoById(Long todoId) {

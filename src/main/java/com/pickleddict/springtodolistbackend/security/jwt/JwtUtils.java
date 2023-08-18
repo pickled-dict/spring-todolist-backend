@@ -50,6 +50,10 @@ public class JwtUtils {
         return Long.parseLong(Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).getBody().getId());
     }
 
+    public void hardValidate(String authToken) {
+        Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);
+    }
+
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(key()).build().parse(authToken);

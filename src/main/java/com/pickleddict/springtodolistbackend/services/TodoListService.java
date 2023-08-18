@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.rmi.UnexpectedException;
 import java.util.List;
 
 @Service
@@ -26,15 +27,26 @@ public class TodoListService {
     @Autowired
     JwtUtils jwtUtils;
 
-    public ResponseEntity<MessageResponse> createTodoList(TodoListDto todoListDto) {
+    public ResponseEntity<TodoList> createTodoList(TodoListDto todoListDto) throws UnexpectedException {
         Long userId = jwtUtils.getUserIdFromJwtToken(jwtUtils.getJwtTokenFromHeader());
-        TodoList todoList =  new TodoList(todoListDto.getTitle());
+        TodoList newTodoList =  new TodoList(todoListDto.getTitle());
 
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
-        user.addTodoList(todoList);
+        user.addTodoList(newTodoList);
         userRepository.save(user);
+        List<TodoList> todoLists =  user.getTodoLists();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponse("Todolist was created successfully"));
+        long largestId = Long.MIN_VALUE;
+        for (TodoList todoList : todoLists) {
+            long currentId = todoList.getId();
+            if (currentId > largestId) {
+                largestId = currentId;
+            }
+        }
+
+        TodoList mostRecent = todoListRepository.findById(largestId).orElseThrow(() -> new UnexpectedException("something went wrong"));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(mostRecent);
     }
 
     public ResponseEntity<List<TodoList>> getAllTodoLists() {

@@ -16,6 +16,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.rmi.UnexpectedException;
+
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -185,9 +187,9 @@ public class TodoControllerTests extends AbstractMvcTest {
         result.andDo(print()).andExpect(status().isUnauthorized());
     }
 
-    private void mockCreateTodo() {
+    private void mockCreateTodo() throws UnexpectedException {
         when(todoService.createTodo(VALID_TODO, TODOLIST_ID))
-                .thenReturn(ResponseEntity.ok(new MessageResponse("ok")))
+                .thenReturn(ResponseEntity.ok(new Todo()))
                 .thenThrow(HttpClientErrorException.BadRequest.class);
     }
 

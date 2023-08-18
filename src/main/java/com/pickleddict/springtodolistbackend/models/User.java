@@ -69,4 +69,13 @@ public class User {
     public void addTodoList(TodoList todoList) {
         this.todoLists.add(todoList);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", todoLists=" + todoLists +
+                '}';
+    }
 }

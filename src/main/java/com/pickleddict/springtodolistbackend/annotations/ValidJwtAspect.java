@@ -29,10 +29,10 @@ public class ValidJwtAspect {
                 .getHeader("Authorization");
 
         if (StringUtils.hasText(jwtToken) && jwtToken.startsWith("Bearer ")) {
-            jwtUtils.validateJwtToken(jwtToken.substring(7));
+            jwtUtils.hardValidate(jwtToken.substring(7));
             return joinPoint.proceed();
         }
 
-        throw new InternalError("Something went wrong while processing your request.");
+        throw new Exception("a badly designed authentication prcedure");
     }
 }
