@@ -9,6 +9,7 @@ import com.pickleddict.springtodolistbackend.repositories.UserRepository;
 import com.pickleddict.springtodolistbackend.security.jwt.JwtUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,14 @@ public class TodoListService {
         return ResponseEntity.status(HttpStatus.CREATED).body(mostRecent);
     }
 
-    public ResponseEntity<List<TodoList>> getAllTodoLists() {
-        return ResponseEntity.ok(todoListRepository.findAll());
+    public ResponseEntity<List<TodoList>> getAllUserTodoLists() {
+        Long userId = jwtUtils.getUserIdFromJwtToken(jwtUtils.getJwtTokenFromHeader());
+        List<TodoList> userTodoLists = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with that id was not found"))
+                .getTodoLists();
+
+        return ResponseEntity.ok(userTodoLists);
     }
 
     public ResponseEntity<TodoList> getTodoListById(Long id) {

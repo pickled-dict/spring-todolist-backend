@@ -29,7 +29,7 @@ public class TodoListController {
     @ValidJwt
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllUserTodoLists() {
-        return todoListService.getAllTodoLists();
+        return todoListService.getAllUserTodoLists();
     }
 
     @GetMapping
