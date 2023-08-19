@@ -1,7 +1,9 @@
 package com.pickleddict.springtodolistbackend.services;
 
+import com.pickleddict.springtodolistbackend.dto.SaveTodoListDto;
 import com.pickleddict.springtodolistbackend.dto.TodoListDto;
 import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
+import com.pickleddict.springtodolistbackend.models.Todo;
 import com.pickleddict.springtodolistbackend.models.TodoList;
 import com.pickleddict.springtodolistbackend.models.User;
 import com.pickleddict.springtodolistbackend.repositories.TodoListRepository;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.rmi.UnexpectedException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoListService {
@@ -79,5 +82,39 @@ public class TodoListService {
         todoListRepository.deleteById(id);
 
         return ResponseEntity.ok(new MessageResponse("Todo with id " + id + " successfully deleted"));
+    }
+
+    public ResponseEntity<?> saveFullTodoList(SaveTodoListDto todoListDto) {
+        Long userId = jwtUtils.getUserIdFromJwtToken(jwtUtils.getJwtTokenFromHeader());
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " was not found"));
+
+        TodoList newTodoList = new TodoList(todoListDto.getTitle());
+        List<Todo> newTodos = todoListDto
+                .getTodos()
+                .stream()
+                .map((td) -> new Todo(td.getContent(), td.isComplete()))
+                .toList();
+
+        newTodoList.setTodos(newTodos);
+        user.addTodoList(newTodoList);
+
+        List<TodoList> userTodoLists = userRepository.save(user).getTodoLists();
+
+        long largestId = Long.MIN_VALUE;
+        for (TodoList todoList : userTodoLists) {
+            long currentId = todoList.getId();
+            if (currentId > largestId) {
+                largestId = currentId;
+            }
+        }
+
+        long finalLargestId = largestId;
+        TodoList newest = todoListRepository
+                .findById(largestId)
+                .orElseThrow(() -> new EntityNotFoundException("Todolist with id " + finalLargestId + " was not found"));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newest);
     }
 }

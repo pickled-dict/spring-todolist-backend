@@ -1,6 +1,7 @@
 package com.pickleddict.springtodolistbackend.controllers;
 
 import com.pickleddict.springtodolistbackend.annotations.ValidJwt;
+import com.pickleddict.springtodolistbackend.dto.SaveTodoListDto;
 import com.pickleddict.springtodolistbackend.dto.TodoListDto;
 import com.pickleddict.springtodolistbackend.services.TodoListService;
 import jakarta.validation.Valid;
@@ -51,5 +52,12 @@ public class TodoListController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteTodoListById(@PathVariable Long id) {
         return todoListService.deleteTodoList(id);
+    }
+
+    @PostMapping("/save")
+    @ValidJwt
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> saveTodoList(@Valid @RequestBody SaveTodoListDto todoListDto) {
+        return todoListService.saveFullTodoList(todoListDto);
     }
 }
