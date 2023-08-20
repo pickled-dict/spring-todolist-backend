@@ -1,6 +1,5 @@
 package com.pickleddict.springtodolistbackend.controllers;
 
-import com.pickleddict.springtodolistbackend.annotations.ValidJwt;
 import com.pickleddict.springtodolistbackend.dto.SaveTodoListDto;
 import com.pickleddict.springtodolistbackend.dto.TodoListDto;
 import com.pickleddict.springtodolistbackend.services.TodoListService;

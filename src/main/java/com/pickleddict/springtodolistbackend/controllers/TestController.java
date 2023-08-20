@@ -1,9 +1,6 @@
 package com.pickleddict.springtodolistbackend.controllers;
 
-import com.pickleddict.springtodolistbackend.annotations.ValidJwt;
 import com.pickleddict.springtodolistbackend.http.response.MessageResponse;
-import com.pickleddict.springtodolistbackend.security.jwt.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +17,6 @@ public class TestController {
         return ResponseEntity.ok(new MessageResponse("Everyone gets a car"));
     }
 
-    @ValidJwt
     @GetMapping("/hasjwt")
     public ResponseEntity<?> jwtAccess() {
         return ResponseEntity.ok(new MessageResponse("Restricted Response"));

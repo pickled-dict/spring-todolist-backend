@@ -1,6 +1,5 @@
 package com.pickleddict.springtodolistbackend.controllers;
 
-import com.pickleddict.springtodolistbackend.annotations.ValidJwt;
 import com.pickleddict.springtodolistbackend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,6 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    @ValidJwt
     public ResponseEntity<?> getAllUsers() {
         return userService.getAllUsers();
     }
