@@ -26,7 +26,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
         ApiError apiError = new ApiError(
                 HttpStatus.UNAUTHORIZED,
-                "Bad username/password combination",
+                authException.getMessage(),
                 authException
         );
         OutputStream out = response.getOutputStream();

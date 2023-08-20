@@ -63,8 +63,11 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<?> verifyUser(VerifyUserDto verifyUserDto) {
-        jwtUtils.validateJwtToken(verifyUserDto.getToken());
-
-        return ResponseEntity.ok(new MessageResponse("user is valid"));
+        try {
+            jwtUtils.validateJwtToken(verifyUserDto.getToken());
+            return ResponseEntity.ok(new MessageResponse("user is valid"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("user is not valid"));
+        }
     }
 }

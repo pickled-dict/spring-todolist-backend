@@ -20,42 +20,36 @@ public class TodoListController {
     TodoListService todoListService;
 
     @PostMapping
-    @ValidJwt
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createTodoList(@Valid @RequestBody TodoListDto todoListDto) throws UnexpectedException {
         return todoListService.createTodoList(todoListDto);
     }
 
     @GetMapping("/all")
-    @ValidJwt
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllUserTodoLists() {
         return todoListService.getAllUserTodoLists();
     }
 
     @GetMapping
-    @ValidJwt
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getTodoListById(@RequestParam(name = "id") Long id) {
         return todoListService.getTodoListById(id);
     }
 
     @PutMapping("/{id}")
-    @ValidJwt
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateTodoListById(@PathVariable Long id, @Valid @RequestBody TodoListDto todoListDto) {
         return todoListService.updateTodoList(id, todoListDto);
     }
 
     @DeleteMapping("/{id}")
-    @ValidJwt
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteTodoListById(@PathVariable Long id) {
         return todoListService.deleteTodoList(id);
     }
 
     @PostMapping("/save")
-    @ValidJwt
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> saveTodoList(@Valid @RequestBody SaveTodoListDto todoListDto) {
         return todoListService.saveFullTodoList(todoListDto);
