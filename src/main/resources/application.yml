@@ -18,7 +18,6 @@ pickleddict:
   app:
     jwtSecret: "bARNHnhdT1SahBE3XpyuiukOrYTIveAOvLsED9nHXfavGwC0FvtKsMx8FEhHKZXF"
     jwtExpirationMs: "86400000"
-#    jwtExpirationMs: "1000"
 
 management:
   endpoints:
