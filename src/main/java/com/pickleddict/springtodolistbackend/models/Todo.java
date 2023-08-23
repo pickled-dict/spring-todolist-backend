@@ -12,7 +12,7 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(length=5000)
     @NotBlank
     private String content;
 
