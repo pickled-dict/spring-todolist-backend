@@ -36,7 +36,9 @@ jobs:
         run: |
           echo "$EC2_SSH_KEY" > ec2_key.pem
           chmod 600 ec2_key.pem
-          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker stop spring-todo-backend"
-          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker rm spring-todo-backend"
-          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker pull pickleddict/spring-todolist-backend"
-          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend"
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} '
+            docker stop spring-todo-backend
+            docker rm spring-todo-backend
+            docker pull pickleddict/spring-todolist-backend
+            docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend
+          '
