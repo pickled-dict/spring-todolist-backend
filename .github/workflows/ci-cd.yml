@@ -19,6 +19,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Write to application.yml file
+        uses: christian-draeger/write-properties@1.1.0
+        with:
+          path: './src/main/resources/application.yml'
+          property: |
+            'spring.datasource.url'
+            'spring.datasource.username'
+            'spring.datasource.password'
+          value: |
+            '${{ secrets.DATASOURCE_URL }}'
+            '${{ secrets.DATASOURCE_USERNAME }}'
+            '${{ secrets.DATASOURCE_PASSWORD }}'
+
       - name: Build and package Spring application
         run: ./gradlew clean assemble
 
