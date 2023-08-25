@@ -19,19 +19,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Write to application.yml file
-        uses: christian-draeger/write-properties@1.1.0
-        with:
-          path: './src/main/resources/application.yml'
-          property: |
-            'spring.datasource.url'
-            'spring.datasource.username'
-            'spring.datasource.password'
-          value: |
-            '${{ secrets.DATASOURCE_URL }}'
-            '${{ secrets.DATASOURCE_USERNAME }}'
-            '${{ secrets.DATASOURCE_PASSWORD }}'
-
       - name: Build and package Spring application
         run: ./gradlew clean assemble
 
@@ -53,4 +40,8 @@ jobs:
               sudo docker stop spring-todo-backend
               sudo docker rm spring-todo-backend
               sudo docker pull pickleddict/spring-todolist-backend
-              sudo docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend
+              sudo docker run -d --name spring-todo-backend -p 8080:8080 \
+              -e SPRING_DATASOURCE_URL='${{ secrets.DATASOURCE_URL }}' \ 
+              -e SPRING_DATASOURCE_USERNAME='${{ secrets.DATASOURCE_USERNAME }}' \ 
+              -e SPRING_DATASOURCE_PASSWORD='${{ secrets.DATASOURCE_PASSWORD }}' \ 
+              pickleddict/spring-todolist-backend
