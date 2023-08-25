@@ -32,16 +32,21 @@ jobs:
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v1.0.0
+        env:
+          DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }}
+          DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }}
+          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: DATASOURCE_URL,DATASOURCE_USERNAME,DATASOURCE_PASSWORD
           script: |
               sudo docker stop spring-todo-backend
               sudo docker rm spring-todo-backend
               sudo docker pull pickleddict/spring-todolist-backend
               sudo docker run -d --name spring-todo-backend -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL='${{ secrets.DATASOURCE_URL }}' \ 
-              -e SPRING_DATASOURCE_USERNAME='${{ secrets.DATASOURCE_USERNAME }}' \ 
-              -e SPRING_DATASOURCE_PASSWORD='${{ secrets.DATASOURCE_PASSWORD }}' \ 
+              -e SPRING_DATASOURCE_URL='$DATASOURCE_URL' \ 
+              -e SPRING_DATASOURCE_USERNAME='$DATASOURCE_USERNAME' \ 
+              -e SPRING_DATASOURCE_PASSWORD='$DATASOURCE_PASSWORD' \ 
               pickleddict/spring-todolist-backend
