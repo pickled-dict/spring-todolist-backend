@@ -27,14 +27,14 @@ jobs:
 
       - name: Push Docker image to registry
         run: |
-          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
           docker push pickleddict/spring-todolist-backend
 
       - name: Deploy to EC2
         run: |
-          echo "$EC2_SSH_KEY" > ec2_key.pem
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
-          ssh -i ec2_key.pem $EC2_LOGIN_STRING "docker stop spring-todo-backend"
-          ssh -i ec2_key.pem $EC2_LOGIN_STRING "docker rm spring-todo-backend"
-          ssh -i ec2_key.pem $EC2_LOGIN_STRING "docker pull pickleddict/spring-todolist-backend"
-          ssh -i ec2_key.pem $EC2_LOGIN_STRING "docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend"
+          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker stop spring-todo-backend"
+          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker rm spring-todo-backend"
+          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker pull pickleddict/spring-todolist-backend"
+          ssh -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} "docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend"
