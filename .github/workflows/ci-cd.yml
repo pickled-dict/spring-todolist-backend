@@ -45,8 +45,4 @@ jobs:
               sudo docker stop spring-todo-backend
               sudo docker rm spring-todo-backend
               sudo docker pull pickleddict/spring-todolist-backend
-              sudo docker run -d --name spring-todo-backend -p 8080:8080 \
-              -e SPRING_DATASOURCE_URL='$DATASOURCE_URL' \ 
-              -e SPRING_DATASOURCE_USERNAME='$DATASOURCE_USERNAME' \ 
-              -e SPRING_DATASOURCE_PASSWORD='$DATASOURCE_PASSWORD' \ 
-              pickleddict/spring-todolist-backend
+              sudo docker run -d --name spring-todo-backend -p 8080:8080 -e SPRING_DATASOURCE_URL='$DATASOURCE_URL' -e SPRING_DATASOURCE_USERNAME='$DATASOURCE_USERNAME' -e SPRING_DATASOURCE_PASSWORD='$DATASOURCE_PASSWORD' pickleddict/spring-todolist-backend
