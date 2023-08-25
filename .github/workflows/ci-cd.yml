@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout Code & Configure Env Var
         uses: actions/checkout@v2
-        env:
-          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -33,12 +31,13 @@ jobs:
           docker push pickleddict/spring-todolist-backend
 
       - name: Deploy to EC2
-        run: |
-          echo "$EC2_SSH_KEY" > ec2_key.pem
-          chmod 600 ec2_key.pem
-          ssh -o StrictHostKeyChecking=no -i ec2_key.pem ${{ secrets.EC2_LOGIN_STRING }} '
-            docker stop spring-todo-backend
-            docker rm spring-todo-backend
-            docker pull pickleddict/spring-todolist-backend
-            docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend
-          '
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+              sudo docker stop spring-todo-backend
+              sudo docker rm spring-todo-backend
+              sudo docker pull pickleddict/spring-todolist-backend
+              sudo docker run -d --name spring-todo-backend -p 8080:8080 pickleddict/spring-todolist-backend
